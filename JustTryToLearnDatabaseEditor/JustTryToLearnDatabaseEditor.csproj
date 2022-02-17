@@ -15,7 +15,17 @@
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.12" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.12" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.12" />
+    <PackageReference Include="Avalonia.Xaml.Interactions" Version="0.10.12" />
+    <PackageReference Include="Avalonia.Xaml.Interactions.Custom" Version="0.10.3" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.12" />
     <PackageReference Include="Material.Avalonia" Version="2.5.0.78-nightly" />
     <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\Dialogs\AddSubjectDialog.axaml.cs">
+      <DependentUpon>AddSubjectDialog.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,44 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dialogs="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="JustTryToLearnDatabaseEditor.Views.Dialogs.EditSubjectDialog"
+        Title="AboutDialog">
+        
+        <Design.DataContext>
+                <dialogs:EditSubjectDialogViewModel />
+        </Design.DataContext>
+        
+        <DockPanel>
+                <StackPanel Height="45" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="10">
+                        <Button Background="Gray" Foreground="White" Margin="5"
+                                Command="{Binding CloseCommand}">
+                                <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                                <avalonia:MaterialIcon Kind="CancelBoxOutline"></avalonia:MaterialIcon>
+                                                <TextBlock FontSize="12" Margin="3" Text="Назад"></TextBlock> 
+                                        </StackPanel>
+                                </Button.Content>
+                        </Button>
+                        <Button Background="Blue" Foreground="White" Margin="5"
+                                Command="{Binding  OnEditCommandExecute}"
+                                CommandParameter="{Binding #_.Text}">
+                                <Button.Content>
+                                        <StackPanel Orientation="Horizontal">
+                                                <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
+                                                <TextBlock FontSize="12" Margin="3" Text="Змінити"></TextBlock> 
+                                        </StackPanel>
+                                </Button.Content>
+                        </Button>
+                        
+                </StackPanel>
+                <StackPanel Margin="5">
+                        <Label FontSize="14" Foreground="Gray">Ім'я предмету</Label>
+                        <TextBox Name="_" Text="{Binding EditedSubjectName}" 
+                                 BorderThickness="0"></TextBox>
+                </StackPanel>
+        </DockPanel>
+</Window>

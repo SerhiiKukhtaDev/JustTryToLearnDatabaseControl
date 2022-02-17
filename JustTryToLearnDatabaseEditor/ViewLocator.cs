@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using JustTryToLearnDatabaseEditor.ViewModels;
 using System;
+using JustTryToLearnDatabaseEditor.ViewModels.Base;
 
 namespace JustTryToLearnDatabaseEditor
 {

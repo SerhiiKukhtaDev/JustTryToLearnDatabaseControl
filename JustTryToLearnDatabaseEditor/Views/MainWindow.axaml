@@ -3,32 +3,87 @@
         xmlns:vm="using:JustTryToLearnDatabaseEditor.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="JustTryToLearnDatabaseEditor.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="{Binding Greeting}">
-
+        >
+        
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    
-    <Grid>
-        <ListBox>
+    <DockPanel>
+        <StackPanel Margin="10" Orientation="Horizontal" Height="50" DockPanel.Dock="Bottom">
+                <Button Background="Red" Foreground="White" Width="150" Margin="5"
+                        Command="{Binding DeleteSubjectCommand}"
+                        CommandParameter="{Binding #Box.SelectedItem}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <avalonia:MaterialIcon Kind="Delete"></avalonia:MaterialIcon>
+                            <TextBlock Text="Видалити" Margin="5"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            <Button Background="Blue" Foreground="White" Width="150" Margin="5"
+                    Command="{Binding EditSubjectCommand}"
+                    CommandParameter="{Binding #Box.SelectedItem}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
+                        <TextBlock Text="Редагувати" Margin="5"></TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Background="Green" Foreground="White" Width="150" Margin="5"
+                    Command="{Binding AddSubjectCommand}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon Kind="BookAdd"></avalonia:MaterialIcon>
+                        <TextBlock Text="Добавити" Margin="5"></TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            </StackPanel>
+        <ListBox Items="{Binding Subjects}" Name="Box" 
+                 SelectedItem="{Binding SelectedSubject}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel VerticalAlignment="Top" Height="100" Orientation="Horizontal"></StackPanel>
+                    <WrapPanel HorizontalAlignment="Left" ItemHeight="120" ItemWidth="120" Orientation="Horizontal" 
+                               VerticalAlignment="Top"></WrapPanel>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <ListBoxItem>
-                <Button>Atata</Button>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Button>Atata</Button>
-            </ListBoxItem>
-            <ListBoxItem>
-                <Button>Atata</Button>
-            </ListBoxItem>
-        </ListBox>
-    </Grid>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5">
+                        <avalonia:MaterialIcon Kind="LearnOutline"
+                                               Width="50"
+                                               Height="50"/>
+                        <Viewbox>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Path=Name}" HorizontalAlignment="Center" />
+                        </Viewbox>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox >
+        <Grid x:Name="OverlayGrid"/>
+        </DockPanel>
+        
+            <!--<Button Background="Gray" Margin="5">
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="DoubleTapped">
+                        <InvokeCommandAction Command="{Binding AddSubject}"/>
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
+                <Button.Content>
+                    <StackPanel Height="80" Width="80" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5">
+                            <avalonia:MaterialIcon Kind="Plus"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"
+                                                   Width="50"
+                                                   Height="50" />
+                            <TextBlock FontSize="16" Text="Add new" HorizontalAlignment="Center" />
+                        </StackPanel>
+                </Button.Content>
+            </Button>-->
 
 </Window>

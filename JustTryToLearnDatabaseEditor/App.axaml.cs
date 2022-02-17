@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using JustTryToLearnDatabaseEditor.Services.DI;
 using JustTryToLearnDatabaseEditor.ViewModels;
 using JustTryToLearnDatabaseEditor.Views;
+using Splat;
 
 namespace JustTryToLearnDatabaseEditor
 {
@@ -17,13 +19,21 @@ namespace JustTryToLearnDatabaseEditor
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                RegisterDependencies();
+                
+                DataContext = GetRequiredService<MainWindowViewModel>();
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = DataContext
                 };
             }
 
             base.OnFrameworkInitializationCompleted();
         }
+        
+        private static void RegisterDependencies() =>
+            Bootstrapper.Register(Locator.CurrentMutable, Locator.Current);
+        
+        private static T GetRequiredService<T>() => Locator.Current.GetService<T>();
     }
 }

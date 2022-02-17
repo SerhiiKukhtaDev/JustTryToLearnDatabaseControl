@@ -1,6 +1,6 @@
 using ReactiveUI;
 
-namespace JustTryToLearnDatabaseEditor.ViewModels
+namespace JustTryToLearnDatabaseEditor.ViewModels.Base
 {
     public class ViewModelBase : ReactiveObject
     {

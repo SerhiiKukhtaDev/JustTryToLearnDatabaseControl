@@ -1,40 +1,95 @@
-using System.Collections.ObjectModel;
 using System.Reactive;
-using Avalonia.Controls;
+using System.Threading.Tasks;
+using DynamicData.Binding;
+using JustTryToLearnDatabaseEditor.Models;
+using JustTryToLearnDatabaseEditor.Services.Interfaces;
+using JustTryToLearnDatabaseEditor.ViewModels.Base;
+using JustTryToLearnDatabaseEditor.ViewModels.Dialogs;
+using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
+using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 using ReactiveUI;
 
 namespace JustTryToLearnDatabaseEditor.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private int _count = 0;
+        #region Fields
 
-        public int Count
+        public IObservableCollection<Subject> Subjects { get; }
+
+        private readonly IDialogService _dialogService;
+
+        private Subject _selectedSubject;
+
+        public Subject SelectedSubject
         {
-            get => _count;
-            set => this.RaiseAndSetIfChanged(ref _count, value);
+            get => _selectedSubject;
+            set => this.RaiseAndSetIfChanged(ref _selectedSubject, value);
         }
 
-        public ObservableCollection<TextBlock> TextBlocks { get; }
+        #endregion
 
-        public ReactiveCommand<Unit, Unit> OnLoaded { get; }
+        #region Commands
 
+        public ReactiveCommand<Unit, Unit> AddSubjectCommand { get; }
 
-        private void OnButtonClickExecute()
+        private async Task OnAddSubjectCommandExecute()
         {
-            Count++;
-        }
+            var result = await _dialogService.ShowDialogAsync<ItemResult<Subject>,
+                IObservableCollection<Subject>>(nameof(AddSubjectDialogViewModel), Subjects);
 
-
-        public MainWindowViewModel()
-        {
-            OnLoaded = ReactiveCommand.Create(OnButtonClickExecute);
-            
-            TextBlocks = new ObservableCollection<TextBlock>()
+            if (result != null)
             {
-                new TextBlock() {Text = "Atata"},
-                new TextBlock() {Text = "Bebebe"}
+                Subjects.Add(result.Item);
+            }
+        }
+
+        public void DeleteSubjectCommand(object parameter)
+        {
+            var index = Subjects.IndexOf(_selectedSubject);
+            Subjects.Remove(_selectedSubject);
+            
+            if (Subjects.Count > 0)
+                SelectedSubject = Subjects[index == 0 ? index :  index - 1];
+        }
+
+        bool CanDeleteSubjectCommand(/* CommandParameter */object parameter)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            return parameter != null;
+        }
+
+        public async Task EditSubjectCommand(object parameter)
+        {
+            var result = await _dialogService.ShowDialogAsync<ItemResult<Subject>, Subject>
+                (nameof(EditSubjectDialogViewModel), SelectedSubject);
+
+            if (result != null)
+            {
+                _selectedSubject.Name = result.Item.Name;
+            }
+        }
+
+        bool CanEditSubjectCommand(/* CommandParameter */object parameter)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            return parameter != null;
+        }
+
+        #endregion
+
+
+        public MainWindowViewModel(IDialogService dialogService)
+        {
+            Subjects = new ObservableCollectionExtended<Subject>
+            {
+                new() {Name = "Математика"},
+                new() {Name = "Біологія"},
             };
+
+            _dialogService = dialogService;
+            
+            AddSubjectCommand = ReactiveCommand.CreateFromTask(OnAddSubjectCommandExecute);
         }
     }
 }

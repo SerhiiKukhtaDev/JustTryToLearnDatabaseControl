@@ -6,6 +6,8 @@ namespace JustTryToLearnDatabaseEditor.Views
 {
     public partial class MainWindow : Window
     {
+        private Grid OverlayGrid => this.FindControl<Grid>("OverlayGrid");
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -13,6 +15,10 @@ namespace JustTryToLearnDatabaseEditor.Views
             this.AttachDevTools();
 #endif
         }
+        
+        public void ShowOverlay() => OverlayGrid.ZIndex = 0;
+
+        public void HideOverlay() => OverlayGrid.ZIndex = 0;
 
         private void InitializeComponent()
         {
