@@ -1,0 +1,73 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:userControls="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.UserControls"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JustTryToLearnDatabaseEditor.Views.UserControls.ThemesControl">
+    <Design.DataContext>
+        <userControls:ThemesControlViewModel/>
+    </Design.DataContext>
+    
+    <DockPanel>
+        <StackPanel Margin="10" Orientation="Horizontal" Height="50" DockPanel.Dock="Bottom">
+                <Button Background="Green" Foreground="White" Width="150" Margin="5"
+                        Command="{Binding DeleteThemeCommand}"
+                        CommandParameter="{Binding #Box.SelectedItem}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <avalonia:MaterialIcon Kind="Delete"></avalonia:MaterialIcon>
+                            <TextBlock Text="Видалити" Margin="5"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            <Button Background="Blue" Foreground="White" Width="150" Margin="5"
+                    Command="{Binding EditThemeCommand}"
+                    CommandParameter="{Binding #Box.SelectedItem}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
+                        <TextBlock Text="Редагувати" Margin="5"></TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button Background="Green" Foreground="White" Width="150" Margin="5"
+                    Command="{Binding AddThemeCommand}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon Kind="BookAdd"></avalonia:MaterialIcon>
+                        <TextBlock Text="Добавити" Margin="5"></TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            </StackPanel>
+        <ListBox Items="{Binding Themes}" Name="Box" 
+                 SelectedItem="{Binding SelectedTheme}">
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="DoubleTapped">
+                    <InvokeCommandAction Command="{Binding OnThemeDoubleTappedExecute}"/>
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel HorizontalAlignment="Left" ItemHeight="120" ItemWidth="120" Orientation="Horizontal" 
+                               VerticalAlignment="Top"></WrapPanel>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5">
+                        <avalonia:MaterialIcon Kind="LearnOutline"
+                                                Width="50"
+                                                Height="50"/>
+                        <Viewbox>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Path=Name}" HorizontalAlignment="Center" />
+                        </Viewbox>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox >
+        <Grid x:Name="OverlayGrid"/>
+        </DockPanel>
+</UserControl>

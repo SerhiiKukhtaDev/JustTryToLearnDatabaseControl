@@ -23,8 +23,16 @@
     <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Views\Dialogs\AddSubjectDialog.axaml.cs">
+    <Compile Update="Views\UserControls\SubjectsControl.axaml.cs">
+      <DependentUpon>SubjectsControl.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialogs\Subjects\AddSubjectDialog.axaml.cs">
       <DependentUpon>AddSubjectDialog.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialogs\Subjects\EditSubjectDialog.axaml.cs">
+      <DependentUpon>EditSubjectDialog.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

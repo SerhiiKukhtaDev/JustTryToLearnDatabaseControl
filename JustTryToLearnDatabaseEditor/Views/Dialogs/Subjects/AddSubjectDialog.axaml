@@ -5,7 +5,7 @@
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:dialogs="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="JustTryToLearnDatabaseEditor.Views.Dialogs.AddSubjectDialog"
+        x:Class="JustTryToLearnDatabaseEditor.Views.Dialogs.Subjects.AddSubjectDialog"
         Title="AddSubjectDialog">
         
         <Design.DataContext>

@@ -3,11 +3,11 @@ using JustTryToLearnDatabaseEditor.Models.Base;
 
 namespace JustTryToLearnDatabaseEditor.Models
 {
-    public sealed class Subject : NotifiedModel
+    public sealed class Class : NotifiedModel
     {
         private string? _name;
         
-        public ObservableCollection<Class> Classes { get; private set; }
+        public ObservableCollection<Theme> Themes { get; private set; }
 
         public string? Name
         {
@@ -15,15 +15,14 @@ namespace JustTryToLearnDatabaseEditor.Models
             set => Set(ref _name, value);
         }
         
-        public void AddClass(Class classToAdd)
+        public void AddTheme(Theme themeToAdd)
         {
-            
-            Classes.Add(classToAdd);
+            Themes.Add(themeToAdd);
         }
 
-        public Subject()
+        public Class()
         {
-            Classes = new ObservableCollection<Class>();
+            Themes = new ObservableCollection<Theme>();
         }
     }
 }

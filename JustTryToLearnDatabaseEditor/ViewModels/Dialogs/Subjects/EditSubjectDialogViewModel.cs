@@ -1,7 +1,6 @@
 ﻿using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
-using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 using ReactiveUI;
 
 namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs
@@ -26,7 +25,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs
         
         public void OnEditCommandExecute(object parameter)
         {
-            Close(new ItemResult<Subject>(false, new Subject() {Name = _editedSubjectName}));
+            Close(new ItemResult<Subject>(new Subject() {Name = _editedSubjectName}));
         }
 
         public bool CanOnEditCommandExecute(object parameter)

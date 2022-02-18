@@ -15,7 +15,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs
         {
             string name = parameter as string;
             
-            Close(new ItemResult<Subject>(false, new Subject {Name = name}));
+            Close(new ItemResult<Subject>(new Subject {Name = name}));
         }
 
         public bool CanAddNewSubject(object parameter)

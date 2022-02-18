@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:uc="clr-namespace:JustTryToLearnDatabaseEditor.Views"
+        xmlns:userControls="clr-namespace:JustTryToLearnDatabaseEditor.Views.UserControls"
         x:Class="JustTryToLearnDatabaseEditor.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         >
@@ -12,78 +14,32 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+    
     <DockPanel>
-        <StackPanel Margin="10" Orientation="Horizontal" Height="50" DockPanel.Dock="Bottom">
-                <Button Background="Red" Foreground="White" Width="150" Margin="5"
-                        Command="{Binding DeleteSubjectCommand}"
-                        CommandParameter="{Binding #Box.SelectedItem}">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <avalonia:MaterialIcon Kind="Delete"></avalonia:MaterialIcon>
-                            <TextBlock Text="Видалити" Margin="5"></TextBlock>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
-            <Button Background="Blue" Foreground="White" Width="150" Margin="5"
-                    Command="{Binding EditSubjectCommand}"
-                    CommandParameter="{Binding #Box.SelectedItem}">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
-                        <TextBlock Text="Редагувати" Margin="5"></TextBlock>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Background="Green" Foreground="White" Width="150" Margin="5"
-                    Command="{Binding AddSubjectCommand}">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <avalonia:MaterialIcon Kind="BookAdd"></avalonia:MaterialIcon>
-                        <TextBlock Text="Добавити" Margin="5"></TextBlock>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            </StackPanel>
-        <ListBox Items="{Binding Subjects}" Name="Box" 
-                 SelectedItem="{Binding SelectedSubject}">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Left" ItemHeight="120" ItemWidth="120" Orientation="Horizontal" 
-                               VerticalAlignment="Top"></WrapPanel>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5">
-                        <avalonia:MaterialIcon Kind="LearnOutline"
-                                               Width="50"
-                                               Height="50"/>
-                        <Viewbox>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Path=Name}" HorizontalAlignment="Center" />
-                        </Viewbox>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox >
+        <TabControl SelectedIndex="{Binding SelectedIndex}" x:Name="TabController">
+            <TabItem Height="0" Background="black" Header="">
+                <userControls:SubjectsControl DataContext="{Binding SubjectsControlViewModel}">
+                    
+                </userControls:SubjectsControl>
+            </TabItem>
+            <TabItem Height="0" Background="black" Header="">
+                <userControls:ClassesControl DataContext="{Binding ClassesControlViewModel}">
+                    
+                </userControls:ClassesControl>
+            </TabItem>
+            <TabItem Height="0" Background="black" Header="">
+                <userControls:ThemesControl DataContext="{Binding ThemesControlViewModel}">
+                    
+                </userControls:ThemesControl>
+            </TabItem>
+            <TabItem Height="0" Background="black" Header="">
+                <userControls:QuestionsUserControl DataContext="{Binding QuestionControlViewModel}">
+                    
+                </userControls:QuestionsUserControl>
+            </TabItem>
+        </TabControl>
         <Grid x:Name="OverlayGrid"/>
         </DockPanel>
-        
-            <!--<Button Background="Gray" Margin="5">
-                <Interaction.Behaviors>
-                    <EventTriggerBehavior EventName="DoubleTapped">
-                        <InvokeCommandAction Command="{Binding AddSubject}"/>
-                    </EventTriggerBehavior>
-                </Interaction.Behaviors>
-                <Button.Content>
-                    <StackPanel Height="80" Width="80" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5">
-                            <avalonia:MaterialIcon Kind="Plus"
-                                                   VerticalAlignment="Center"
-                                                   HorizontalAlignment="Center"
-                                                   Width="50"
-                                                   Height="50" />
-                            <TextBlock FontSize="16" Text="Add new" HorizontalAlignment="Center" />
-                        </StackPanel>
-                </Button.Content>
-            </Button>-->
+    
 
 </Window>

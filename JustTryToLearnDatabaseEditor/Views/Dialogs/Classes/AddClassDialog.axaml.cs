@@ -1,15 +1,15 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
-using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 using JustTryToLearnDatabaseEditor.Views.Dialogs.Base;
 
-namespace JustTryToLearnDatabaseEditor.Views.Dialogs
+namespace JustTryToLearnDatabaseEditor.Views.Dialogs.Classes
 {
-    public class EditSubjectDialog : DialogWindowBase<ItemResult<Subject>>
+    public class AddClassDialog : DialogWindowBase<ItemResult<Class>>
     {
-        public EditSubjectDialog()
+        public AddClassDialog()
         {
             InitializeComponent();
 #if DEBUG
