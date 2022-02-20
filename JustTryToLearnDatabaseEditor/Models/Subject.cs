@@ -3,13 +3,13 @@ using JustTryToLearnDatabaseEditor.Models.Base;
 
 namespace JustTryToLearnDatabaseEditor.Models
 {
-    public sealed class Subject : NotifiedModel
+    public sealed class Subject : NotifiedModel, INamedModel
     {
         private string? _name;
         
         public ObservableCollection<Class> Classes { get; private set; }
 
-        public string? Name
+        public string? ItemName
         {
             get => _name;
             set => Set(ref _name, value);
@@ -17,8 +17,12 @@ namespace JustTryToLearnDatabaseEditor.Models
         
         public void AddClass(Class classToAdd)
         {
-            
             Classes.Add(classToAdd);
+        }
+
+        public void RemoveClass(Class @class)
+        {
+            Classes.Remove(@class);
         }
 
         public Subject()

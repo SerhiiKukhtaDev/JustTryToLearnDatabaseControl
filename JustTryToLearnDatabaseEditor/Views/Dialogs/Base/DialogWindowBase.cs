@@ -12,7 +12,7 @@ namespace JustTryToLearnDatabaseEditor.Views.Dialogs.Base
     public class DialogWindowBase<TResult> : Window where TResult : DialogResultBase
         
     {
-        private Window ParentWindow => (Window) Owner;
+        protected Window ParentWindow => (Window) Owner;
 
         protected DialogViewModelBase<TResult> ViewModel => (DialogViewModelBase<TResult>) DataContext;
 
@@ -44,7 +44,7 @@ namespace JustTryToLearnDatabaseEditor.Views.Dialogs.Base
             Position = new PixelPoint((int) x, (int) y);
         }
 
-        private void LockSize()
+        protected virtual void LockSize()
         {
             Width = MaxWidth = ParentWindow.ClientSize.Width / 2;
             Height = MaxHeight = ParentWindow.ClientSize.Height / 2;

@@ -36,7 +36,7 @@
         </StackPanel>
         <StackPanel Margin="5">
             <Label FontSize="14" Foreground="Gray">Ім'я теми</Label>
-            <TextBox Name="_" Text="{Binding EditedThemeName}" 
+            <TextBox Name="_" Text="{Binding EditedItemName}" 
                      BorderThickness="0"></TextBox>
         </StackPanel>
     </DockPanel>

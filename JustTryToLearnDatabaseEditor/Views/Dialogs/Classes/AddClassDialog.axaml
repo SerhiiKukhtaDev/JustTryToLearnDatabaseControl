@@ -23,7 +23,7 @@
                 </Button.Content>
             </Button>
             <Button Background="Green" Foreground="White" Margin="5"
-                    Command="{Binding  AddNewClass}"
+                    Command="{Binding  AddNewItem}"
                     CommandParameter="{Binding #_.Text}">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">

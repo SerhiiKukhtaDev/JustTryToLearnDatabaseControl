@@ -1,31 +1,25 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Threading.Tasks;
+using DynamicData;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Services.Interfaces;
-using JustTryToLearnDatabaseEditor.ViewModels.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions;
-using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Themes;
+using JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils;
 using ReactiveUI;
 
 namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 {
-    public class QuestionControlViewModel : ViewModelBase
+    public class QuestionControlViewModel : SingleItemUserControlViewModel<,>
     {
+        public event Action ReturnRequested;
+        
         private readonly IDialogService _dialogService;
         private Theme _currentTheme;
-        
-        private ObservableCollection<Question> _questions;
-
-        public ObservableCollection<Question> Questions
-        {
-            get => _questions;
-            set => this.RaiseAndSetIfChanged(ref _questions, value);
-        }
 
         private Question _selectedQuestion;
         
@@ -38,14 +32,15 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         public void SetQuestionsBy(Theme selectedTheme)
         {
             _currentTheme = selectedTheme;
-            Questions = _currentTheme.Questions;
+            
+            AllItems.Clear();
+            AllItems.AddRange(_currentTheme.Questions);
         }
 
         public QuestionControlViewModel(IDialogService dialogService)
         {
             _dialogService = dialogService;
-            Questions = new ObservableCollection<Question>();
-            
+
             AddQuestionCommand = ReactiveCommand.CreateFromTask(OnAddQuestionCommandExecute);
         }
         
@@ -54,11 +49,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         private async Task OnAddQuestionCommandExecute()
         {
             var result = await _dialogService.ShowDialogAsync<ItemResult<Question>,
-                ObservableCollection<Question>>(nameof(AddQuestionDialogViewModel), Questions);
+                IEnumerable<Question>>(nameof(AddQuestionDialogViewModel), AllItems.Items);
 
             if (result != null)
             {
-                Questions.Add(result.Item);
+                _currentTheme.AddQuestion(result.Item);
+                AllItems.Add(result.Item);
             }
         }
 
@@ -71,11 +67,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
             if (result != null)
             {
-                var index = Questions.IndexOf(_selectedQuestion);
-                Questions.Remove(_selectedQuestion);
-            
-                if (Questions.Count > 0)
-                    SelectedQuestion = Questions[index == 0 ? index :  index - 1];
+                var index = Items.IndexOf(SelectedQuestion);
+                _currentTheme.RemoveQuestion(SelectedQuestion);
+                AllItems.Remove(SelectedQuestion);
+
+                if (Items.Count > 0)
+                    SelectedQuestion = Items[index == 0 ? index :  index - 1];
             }
         }
 
@@ -92,7 +89,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
             if (result != null)
             {
-                _selectedQuestion.Name = result.Item.Name;
+                var item = result.Item;
+                
+                SelectedQuestion.Answers = item.Answers;
+                SelectedQuestion.Difficulty = item.Difficulty;
+                SelectedQuestion.ItemName = item.ItemName;
+                SelectedQuestion.TimeToAnswer = item.TimeToAnswer;
             }
         }
 
@@ -100,6 +102,11 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             return parameter != null;
+        }
+        
+        public void OnReturnRequestedExecute()
+        {
+            ReturnRequested?.Invoke();
         }
     }
 }

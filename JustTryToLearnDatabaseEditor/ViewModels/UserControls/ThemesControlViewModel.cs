@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using DynamicData;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Services.Interfaces;
 using JustTryToLearnDatabaseEditor.ViewModels.Base;
@@ -11,24 +13,18 @@ using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Classes;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Themes;
+using JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils;
 using ReactiveUI;
 
 namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 {
-    public class ThemesControlViewModel : ViewModelBase
+    public class ThemesControlViewModel : SingleItemUserControlViewModel<,>
     {
         private readonly IDialogService _dialogService;
         public event Action<Theme> ThemeDoubleTapped;
+        public event Action ReturnRequested;
         
         private Class _currentClass;
-        
-        private ObservableCollection<Theme> _themes;
-
-        public ObservableCollection<Theme> Themes
-        {
-            get => _themes;
-            set => this.RaiseAndSetIfChanged(ref _themes, value);
-        }
 
         private Theme _selectedTheme;
         
@@ -46,12 +42,13 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         public void SetThemesBy(Class selectedClass)
         {
             _currentClass = selectedClass;
-            Themes = _currentClass.Themes;
+            
+            AllItems.Clear();
+            AllItems.AddRange(_currentClass.Themes);
         }
 
         public ThemesControlViewModel(IDialogService dialogService)
         {
-            Themes = new ObservableCollection<Theme>();
             _dialogService = dialogService;
             
             AddThemeCommand = ReactiveCommand.CreateFromTask(OnAddThemeCommandExecute);
@@ -62,17 +59,17 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         private async Task OnAddThemeCommandExecute()
         {
             var result = await _dialogService.ShowDialogAsync<ItemResult<Theme>,
-                ObservableCollection<Theme>>(nameof(AddThemeDialogViewModel), Themes);
+                IEnumerable<Theme>>(nameof(AddThemeDialogViewModel), AllItems.Items);
 
             if (result != null)
             {
-                Themes.Add(result.Item);
+                AllItems.Add(result.Item);
             }
         }
 
         public async Task DeleteThemeCommand(object parameter)
         {
-            string message = "Видалення цієї теми призведе до видалення всіх питань які з ним зв'язані. " +
+            string message = "Видалення цієї теми призведе до видалення всіх питань які з нею зв'язані. " +
                              "Дійсно бажаєте видалити?";
             
             var result = await _dialogService.ShowDialogAsync<DialogResultBase, string>
@@ -80,11 +77,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
             if (result != null)
             {
-                var index = Themes.IndexOf(_selectedTheme);
-                Themes.Remove(_selectedTheme);
+                var index = Items.IndexOf(_selectedTheme);
+                _currentClass.RemoveTheme(_selectedTheme);
+                AllItems.Remove(_selectedTheme);
             
-                if (Themes.Count > 0)
-                    SelectedTheme = Themes[index == 0 ? index :  index - 1];
+                if (Items.Count > 0)
+                    SelectedTheme = Items[index == 0 ? index :  index - 1];
             }
         }
 
@@ -101,7 +99,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
             if (result != null)
             {
-                _selectedTheme.Name = result.Item.Name;
+                _selectedTheme.ItemName = result.Item.ItemName;
             }
         }
 
@@ -109,6 +107,11 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             return parameter != null;
+        }
+
+        public void OnReturnRequestedExecute()
+        {
+            ReturnRequested?.Invoke();
         }
     }
 }

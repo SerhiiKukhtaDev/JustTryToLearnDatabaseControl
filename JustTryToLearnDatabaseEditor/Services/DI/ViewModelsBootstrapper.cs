@@ -4,6 +4,7 @@ using JustTryToLearnDatabaseEditor.ViewModels;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Classes;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions;
+using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Subjects;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Themes;
 using JustTryToLearnDatabaseEditor.ViewModels.UserControls;
 using Splat;

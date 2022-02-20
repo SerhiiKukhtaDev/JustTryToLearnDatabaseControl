@@ -1,37 +1,13 @@
-﻿using DynamicData.Binding;
-using JustTryToLearnDatabaseEditor.Models;
+﻿using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base;
-using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
-using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 
-namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs
+namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Subjects
 {
-    public class AddSubjectDialogViewModel : 
-        ParameterizedDialogViewModelBase<ItemResult<Subject>, IObservableCollection<Subject>>
+    public class AddSubjectDialogViewModel : AddSingleSubjectDialogViewModel<Subject>
     {
-        private IObservableCollection<Subject> _subjects;
-
-        public void AddNewSubject(object parameter)
-        {
-            string name = parameter as string;
-            
-            Close(new ItemResult<Subject>(new Subject {Name = name}));
-        }
-
-        public bool CanAddNewSubject(object parameter)
-        {
-            return true;
-        }
-        
         public AddSubjectDialogViewModel()
         {
             
-        }
-
-
-        public override void Activate(IObservableCollection<Subject> parameter)
-        {
-            _subjects = parameter;
         }
     }
 }

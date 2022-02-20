@@ -7,7 +7,7 @@ using JustTryToLearnDatabaseEditor.Views.Dialogs.Base;
 
 namespace JustTryToLearnDatabaseEditor.Views.Dialogs.Questions
 {
-    public class EditQuestionDialog : DialogWindowBase<ItemResult<Question>>
+    public class EditQuestionDialog : QuestionDialogWindowBase<ItemResult<Question>>
     {
         public EditQuestionDialog()
         {

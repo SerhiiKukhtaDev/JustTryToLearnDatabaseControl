@@ -25,15 +25,33 @@ namespace JustTryToLearnDatabaseEditor.ViewModels
         public MainWindowViewModel(IDialogService dialogService)
         {
             SubjectsControlViewModel = new SubjectsControlViewModel(dialogService);
-            SubjectsControlViewModel.SubjectDoubleTapped += OnSubjectDoubleTapped;
+            SubjectsControlViewModel.ItemDoubleTapped += OnItemDoubleTapped;
 
             ClassesControlViewModel = new ClassesControlViewModel(dialogService);
             ClassesControlViewModel.ClassDoubleTapped += OnClassDoubleTapped;
+            ClassesControlViewModel.ReturnRequested += OnClassesReturnRequested;
 
             ThemesControlViewModel = new ThemesControlViewModel(dialogService);
             ThemesControlViewModel.ThemeDoubleTapped += OnThemeDoubleTapped;
-
+            ThemesControlViewModel.ReturnRequested += OnThemesReturnRequested;
+            
             QuestionControlViewModel = new QuestionControlViewModel(dialogService);
+            QuestionControlViewModel.ReturnRequested += OnQuestionReturnRequested;
+        }
+
+        private void OnQuestionReturnRequested()
+        {
+            SelectedIndex = 2;
+        }
+
+        private void OnThemesReturnRequested()
+        {
+            SelectedIndex = 1;
+        }
+
+        private void OnClassesReturnRequested()
+        {
+            SelectedIndex = 0;
         }
 
         private void OnThemeDoubleTapped(Theme obj)
@@ -48,7 +66,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels
             ThemesControlViewModel.SetThemesBy(obj);
         }
 
-        private void OnSubjectDoubleTapped(Subject obj)
+        private void OnItemDoubleTapped(Subject obj)
         {
             SelectedIndex = 1;
             ClassesControlViewModel.SetClassesBy(obj);

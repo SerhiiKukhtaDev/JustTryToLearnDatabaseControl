@@ -4,39 +4,99 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:questions="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions"
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="JustTryToLearnDatabaseEditor.Views.Dialogs.Questions.AddQuestionDialog"
         Title="AddQuestionDialog">
+    
     <Design.DataContext>
         <questions:AddQuestionDialogViewModel />
     </Design.DataContext>
         
     <DockPanel>
-        <StackPanel Height="45" HorizontalAlignment="Right" DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="10">
-            <Button Background="Gray" Foreground="White" Margin="5"
-                    Command="{Binding CloseCommand}">
-                <Button.Content>
+        <DockPanel Dock="Bottom">
+            <StackPanel DockPanel.Dock="Right" Height="45" HorizontalAlignment="Right" Orientation="Horizontal" Margin="10">
+                <Button Background="Gray" Foreground="White" Margin="5"
+                        Command="{Binding CloseCommand}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="CancelBoxOutline"></avalonia:MaterialIcon>
+                            <TextBlock FontSize="12" Margin="3" Text="Назад"></TextBlock> 
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Background="Green" Foreground="White" Margin="5"
+                        Command="{Binding  AddNewQuestion}"
+                        CommandParameter="{Binding #Box.Items}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
+                            <TextBlock FontSize="12" Margin="3" Text="Добавити"></TextBlock> 
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <DockPanel>
+                <ComboBox SelectedItem="{Binding SelectedDifficulty}"
+                          Items="{Binding DifficultyTypes}"
+                          Width="120" Margin="22 " DockPanel.Dock="Right" HorizontalAlignment="Right" 
+                          SelectedIndex="0">
+                </ComboBox>
+                <StackPanel Margin="10 0">
                     <StackPanel Orientation="Horizontal">
-                        <avalonia:MaterialIcon Kind="CancelBoxOutline"></avalonia:MaterialIcon>
-                        <TextBlock FontSize="12" Margin="3" Text="Назад"></TextBlock> 
+                        <Label Margin="0 12 0 0">Час на відповідь: </Label>
+                        <TextBox Margin="5 10 0 0" Width="30" BorderThickness="0" HorizontalAlignment="Left" Text="{Binding SliderValue}"></TextBox>
+                        <Label Margin="0 12 0 0">секунд</Label>
                     </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Background="Green" Foreground="White" Margin="5"
-                    Command="{Binding  AddNewQuestion}"
-                    CommandParameter="{Binding #_.Text}">
-                <Button.Content>
+                    <StackPanel>
+                        <Slider Value="{Binding SliderValue}" Maximum="180" Minimum="10"></Slider>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+            
+        </DockPanel>
+        
+        <StackPanel DockPanel.Dock="Top" Margin="5">
+            <TextBox Watermark="Запитання" Text="{Binding QuestionText}" BorderThickness="0"></TextBox>
+            <StackPanel Margin="5">
                     <StackPanel Orientation="Horizontal">
-                        <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
-                        <TextBlock FontSize="12" Margin="3" Text="Добавити"></TextBlock> 
+                        <Label>Відповіді</Label>
+                        <Button Command="{Binding AddNewAnswerExecute}"
+                                CommandParameter="{Binding #Box.ItemCount}"
+                                Foreground="White" Padding="10 0" Margin="2 0" >+</Button>
+                        <Button Command="{Binding DeleteNewAnswerExecute}"
+                                CommandParameter="{Binding #Box.SelectedItem}"
+                                Background="Red" Foreground="White" Padding="10 0" Margin="2 0" >-</Button>
                     </StackPanel>
-                </Button.Content>
-            </Button>
-                        
-        </StackPanel>
-        <StackPanel Margin="5">
-            <Label FontSize="14" Foreground="Gray">Ім'я теми</Label>
-            <TextBox Name="_" BorderThickness="0"></TextBox>
-        </StackPanel>
+            </StackPanel>
+            </StackPanel>
+        <ListBox Name="Box" Items="{Binding  Answers}"
+                 SelectedItem="{Binding SelectedAnswer}">
+                <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <styles:Card Height="40">
+                                    <DockPanel>
+                                        <CheckBox Margin="10 0" DockPanel.Dock="Right"
+                                                  Command="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                  AncestorType={x:Type ListBox}}, Path=DataContext.ChooseRightAnswer}"
+                                                  CommandParameter="{Binding Element}"
+                                                  IsEnabled="{Binding IsEnabled}"></CheckBox>
+                                        <avalonia:MaterialIcon  Kind="QuestionAnswer"></avalonia:MaterialIcon>
+                                        <TextBox Classes="Solo" Watermark="Відповідь" Margin="5 0" Height="40" FontSize="14" BorderThickness="0" 
+                                                 Text="{Binding AnswerText}" >
+                                            <Interaction.Behaviors>
+                                                <EventTriggerBehavior EventName="GotFocus">
+                                                    <InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                  AncestorType={x:Type ListBox}}, Path=DataContext.TextBoxTapped}"
+                                                                         CommandParameter="{Binding Element}"/>
+                                                </EventTriggerBehavior>
+                                            </Interaction.Behaviors>
+                                        </TextBox>
+                                    </DockPanel>
+                        </styles:Card>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox >
     </DockPanel>
 </Window>

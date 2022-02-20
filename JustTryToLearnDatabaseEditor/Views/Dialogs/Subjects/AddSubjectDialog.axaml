@@ -4,12 +4,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         xmlns:dialogs="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs"
+        xmlns:subjects="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Subjects"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="JustTryToLearnDatabaseEditor.Views.Dialogs.Subjects.AddSubjectDialog"
         Title="AddSubjectDialog">
         
         <Design.DataContext>
-                <dialogs:AddSubjectDialogViewModel />
+                <subjects:AddSubjectDialogViewModel />
         </Design.DataContext>
         
         <DockPanel>
@@ -24,7 +25,7 @@
                                 </Button.Content>
                         </Button>
                         <Button Background="Green" Foreground="White" Margin="5"
-                                Command="{Binding  AddNewSubject}"
+                                Command="{Binding  AddNewItem}"
                                 CommandParameter="{Binding #_.Text}">
                                 <Button.Content>
                                         <StackPanel Orientation="Horizontal">
@@ -33,7 +34,6 @@
                                         </StackPanel>
                                 </Button.Content>
                         </Button>
-                        
                 </StackPanel>
                 <StackPanel Margin="5">
                         <Label FontSize="14" Foreground="Gray">Ім'я нового предмету</Label>

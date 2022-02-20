@@ -5,6 +5,8 @@
              x:Class="JustTryToLearnDatabaseEditor.App">
     <Application.Resources>
         <themes:BundledTheme BaseTheme="Light" PrimaryColor="Teal" SecondaryColor="Amber"/>
+            <SolidColorBrush x:Key="EditButton">#2179fc</SolidColorBrush>
+            <SolidColorBrush x:Key="DeleteButton">#fc214c</SolidColorBrush>
     </Application.Resources>
     <Application.DataTemplates>
         <local:ViewLocator/>

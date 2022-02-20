@@ -1,39 +1,30 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Threading.Tasks;
 using DynamicData;
-using DynamicData.Binding;
-using JetBrains.Annotations;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Services.Interfaces;
-using JustTryToLearnDatabaseEditor.ViewModels.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Classes;
+using JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils;
 using ReactiveUI;
 
 namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 {
-    public class ClassesControlViewModel : ViewModelBase
+    public class ClassesControlViewModel : SingleItemUserControlViewModel<,>
     {
         public event Action<Class> ClassDoubleTapped;
+        public event Action ReturnRequested;
 
         private readonly IDialogService _dialogService;
         
         private Subject _currentSubject;
-        
-        private ObservableCollection<Class> _classes;
-
-        public ObservableCollection<Class> Classes
-        {
-            get => _classes;
-            set => this.RaiseAndSetIfChanged(ref _classes, value);
-        }
 
         private Class _selectedClass;
-        
+
         public Class SelectedClass
         {
             get => _selectedClass;
@@ -48,12 +39,13 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         public void SetClassesBy(Subject selectedSubject)
         {
             _currentSubject = selectedSubject;
-            Classes = _currentSubject.Classes;
+            
+            AllItems.Clear();
+            AllItems.AddRange(_currentSubject.Classes);
         }
 
         public ClassesControlViewModel(IDialogService dialogService)
         {
-            Classes = new ObservableCollection<Class>();
             _dialogService = dialogService;
             
             AddClassCommand = ReactiveCommand.CreateFromTask(OnAddClassCommandExecute);
@@ -64,11 +56,11 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         private async Task OnAddClassCommandExecute()
         {
             var result = await _dialogService.ShowDialogAsync<ItemResult<Class>,
-                ObservableCollection<Class>>(nameof(AddClassDialogViewModel), Classes);
+                IEnumerable<Class>>(nameof(AddClassDialogViewModel), AllItems.Items);
 
             if (result != null)
             {
-                Classes.Add(result.Item);
+                AllItems.Add(result.Item);
             }
         }
 
@@ -82,11 +74,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
             if (result != null)
             {
-                var index = Classes.IndexOf(_selectedClass);
-                Classes.Remove(_selectedClass);
+                var index = Items.IndexOf(_selectedClass);
+                _currentSubject.RemoveClass(_selectedClass);
+                AllItems.Remove(_selectedClass);
             
-                if (Classes.Count > 0)
-                    SelectedClass = Classes[index == 0 ? index :  index - 1];
+                if (Items.Count > 0)
+                    SelectedClass = Items[index == 0 ? index :  index - 1];
             }
         }
 
@@ -103,7 +96,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
             if (result != null)
             {
-                _selectedClass.Name = result.Item.Name;
+                _selectedClass.ItemName = result.Item.ItemName;
             }
         }
 
@@ -111,6 +104,16 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             return parameter != null;
+        }
+
+        public void OnReturnRequestedExecute()
+        {
+            ReturnRequested?.Invoke();
+        }
+
+        public ClassesControlViewModel()
+        {
+            
         }
     }
 }

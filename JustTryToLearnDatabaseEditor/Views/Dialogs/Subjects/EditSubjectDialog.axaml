@@ -4,12 +4,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dialogs="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs"
         xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:subjects="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Subjects"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="JustTryToLearnDatabaseEditor.Views.Dialogs.Subjects.EditSubjectDialog"
         Title="AboutDialog">
         
         <Design.DataContext>
-                <dialogs:EditSubjectDialogViewModel />
+                <subjects:EditSubjectDialogViewModel />
         </Design.DataContext>
         
         <DockPanel>
@@ -37,7 +38,7 @@
                 </StackPanel>
                 <StackPanel Margin="5">
                         <Label FontSize="14" Foreground="Gray">Ім'я предмету</Label>
-                        <TextBox Name="_" Text="{Binding EditedSubjectName}" 
+                        <TextBox Name="_" Text="{Binding EditedItemName}" 
                                  BorderThickness="0"></TextBox>
                 </StackPanel>
         </DockPanel>

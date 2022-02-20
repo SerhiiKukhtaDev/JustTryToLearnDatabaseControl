@@ -16,6 +16,7 @@
     </Design.DataContext>
     
     <DockPanel>
+        <Grid DockPanel.Dock="Top" x:Name="OverlayGrid"/>
         <TabControl SelectedIndex="{Binding SelectedIndex}" x:Name="TabController">
             <TabItem Height="0" Background="black" Header="">
                 <userControls:SubjectsControl DataContext="{Binding SubjectsControlViewModel}">
@@ -38,8 +39,5 @@
                 </userControls:QuestionsUserControl>
             </TabItem>
         </TabControl>
-        <Grid x:Name="OverlayGrid"/>
-        </DockPanel>
-    
-
+    </DockPanel>
 </Window>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:userControls="clr-namespace:JustTryToLearnDatabaseEditor.ViewModels.UserControls"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JustTryToLearnDatabaseEditor.Views.UserControls.ThemesControl">
     <Design.DataContext>
@@ -11,10 +12,33 @@
     </Design.DataContext>
     
     <DockPanel>
-        <StackPanel Margin="10" Orientation="Horizontal" Height="50" DockPanel.Dock="Bottom">
-                <Button Background="Green" Foreground="White" Width="150" Margin="5"
-                        Command="{Binding DeleteThemeCommand}"
+        <Grid DockPanel.Dock="Top" x:Name="OverlayGrid"/>
+        <DockPanel Dock="Bottom">
+            <StackPanel Margin="10" Orientation="Horizontal" DockPanel.Dock="Left">
+                <Button Width="150" Margin="5" Background="{DynamicResource EditButton}" Foreground="White"
+                        Command="{Binding EditThemeCommand}"
                         CommandParameter="{Binding #Box.SelectedItem}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
+                            <TextBlock Text="Редагувати" Margin="5"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Background="Green" Foreground="White" Width="150" Margin="5"
+                        Command="{Binding AddThemeCommand}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <avalonia:MaterialIcon Kind="BookAdd"></avalonia:MaterialIcon>
+                            <TextBlock Text="Добавити" Margin="5"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+                <Button Background="{DynamicResource DeleteButton}"
+                    HorizontalAlignment="Right" Margin="15"  Foreground="White" Width="150"
+                    Command="{Binding DeleteThemeCommand}"
+                    CommandParameter="{Binding #Box.SelectedItem}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <avalonia:MaterialIcon Kind="Delete"></avalonia:MaterialIcon>
@@ -22,52 +46,49 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-            <Button Background="Blue" Foreground="White" Width="150" Margin="5"
-                    Command="{Binding EditThemeCommand}"
-                    CommandParameter="{Binding #Box.SelectedItem}">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
-                        <TextBlock Text="Редагувати" Margin="5"></TextBlock>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Background="Green" Foreground="White" Width="150" Margin="5"
-                    Command="{Binding AddThemeCommand}">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <avalonia:MaterialIcon Kind="BookAdd"></avalonia:MaterialIcon>
-                        <TextBlock Text="Добавити" Margin="5"></TextBlock>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            </StackPanel>
-        <ListBox Items="{Binding Themes}" Name="Box" 
-                 SelectedItem="{Binding SelectedTheme}">
-            <Interaction.Behaviors>
-                <EventTriggerBehavior EventName="DoubleTapped">
-                    <InvokeCommandAction Command="{Binding OnThemeDoubleTappedExecute}"/>
-                </EventTriggerBehavior>
-            </Interaction.Behaviors>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Left" ItemHeight="120" ItemWidth="120" Orientation="Horizontal" 
-                               VerticalAlignment="Top"></WrapPanel>
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5">
-                        <avalonia:MaterialIcon Kind="LearnOutline"
-                                                Width="50"
-                                                Height="50"/>
-                        <Viewbox>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Path=Name}" HorizontalAlignment="Center" />
-                        </Viewbox>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox >
-        <Grid x:Name="OverlayGrid"/>
         </DockPanel>
+        <DockPanel>
+            <Button Background="Gray" Foreground="White" DockPanel.Dock="Top" Height="25" Width="150" Margin="10" HorizontalAlignment="Left"
+                    Command="{Binding OnReturnRequestedExecute}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <avalonia:MaterialIcon Kind="KeyboardReturn"></avalonia:MaterialIcon>
+                        <TextBlock Height="20" Margin="2" Text="Класи"></TextBlock>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <styles:ColorZone Mode="Light" Margin="10">
+                <StackPanel>
+                    <DockPanel>
+                        <TextBlock VerticalAlignment="Top" DockPanel.Dock="Left" FontSize="14" Foreground="Gray" FontStyle="Italic" Margin="10" Text="Теми: "></TextBlock>
+                        <DockPanel Height="50" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250" Margin="20 0">
+                            <TextBox Text="{Binding SearchText}" Background="White" Watermark="Пошук" Classes="Filled" Height="30" BorderThickness="0">
+                                <TextBox.InnerLeftContent>
+                                    <Button Classes="Flat" Padding="4" Width="{Binding $self.Bounds.Height}"
+                                            Content="{avalonia:MaterialIconExt Search, Size=22}" />
+                                </TextBox.InnerLeftContent>
+                            </TextBox>
+                            
+                        </DockPanel>
+                    </DockPanel>
+                    <ListBox HorizontalAlignment="Stretch" Items="{Binding Items}" Name="Box" 
+                             SelectedItem="{Binding SelectedTheme}">
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="DoubleTapped">
+                                <InvokeCommandAction Command="{Binding OnThemeDoubleTappedExecute}"/>
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5">
+                                    <avalonia:MaterialIcon Width="30" Height="30" Kind="ThemeOutline"/>
+                                    <TextBlock Margin="5" FontSize="16" Text="{Binding Path=ItemName}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox >
+                </StackPanel>
+            </styles:ColorZone>
+        </DockPanel>
+    </DockPanel>
 </UserControl>

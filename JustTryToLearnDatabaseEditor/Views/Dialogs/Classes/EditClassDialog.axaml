@@ -35,8 +35,8 @@
                         
         </StackPanel>
         <StackPanel Margin="5">
-            <Label FontSize="14" Foreground="Gray">Ім'я предмету</Label>
-            <TextBox Name="_" Text="{Binding EditedClassName}" 
+            <Label FontSize="14" Foreground="Gray">Ім'я класу</Label>
+            <TextBox Name="_" Text="{Binding EditedItemName}" 
                      BorderThickness="0"></TextBox>
         </StackPanel>
     </DockPanel>
