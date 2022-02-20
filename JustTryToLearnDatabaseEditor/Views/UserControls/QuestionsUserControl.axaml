@@ -17,7 +17,7 @@
         <DockPanel Dock="Bottom">
             <StackPanel Margin="10" Orientation="Horizontal" DockPanel.Dock="Left">
                 <Button Width="150" Margin="5" Background="{DynamicResource EditButton}" Foreground="White"
-                        Command="{Binding EditQuestionCommand}"
+                        Command="{Binding EditItemCommand}"
                         CommandParameter="{Binding #Box.SelectedItem}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -27,7 +27,7 @@
                     </Button.Content>
                 </Button>
                 <Button Background="Green" Foreground="White" Width="150" Margin="5"
-                        Command="{Binding AddQuestionCommand}">
+                        Command="{Binding AddItemCommand}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <avalonia:MaterialIcon Kind="BookAdd"></avalonia:MaterialIcon>
@@ -38,7 +38,7 @@
             </StackPanel>
                 <Button Background="{DynamicResource DeleteButton}"
                     HorizontalAlignment="Right" Margin="15"  Foreground="White" Width="150"
-                    Command="{Binding DeleteQuestionCommand}"
+                    Command="{Binding DeleteItemCommand}"
                     CommandParameter="{Binding #Box.SelectedItem}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -50,7 +50,7 @@
         </DockPanel>
         <DockPanel>
             <Button Background="Gray" Foreground="White" DockPanel.Dock="Top" Height="25" Width="150" Margin="10" HorizontalAlignment="Left"
-                    Command="{Binding OnReturnRequestedExecute}">
+                    Command="{Binding ReturnToParentExecute}">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <avalonia:MaterialIcon Kind="KeyboardReturn"></avalonia:MaterialIcon>
@@ -73,7 +73,7 @@
                         </DockPanel>
                     </DockPanel>
                     <ListBox HorizontalAlignment="Stretch" Items="{Binding Items}" Name="Box" 
-                             SelectedItem="{Binding SelectedQuestion}">
+                             SelectedItem="{Binding SelectedItem}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5">

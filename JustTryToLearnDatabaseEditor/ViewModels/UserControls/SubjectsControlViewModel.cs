@@ -13,11 +13,25 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
         private const string DeleteMessage =
             "Видалення цього придмета призведе до видалення всіх питань які залежать від нього." +
             "Дійсно бажаєте видалити?";
-        
-        
+
 
         public SubjectsControlViewModel(IDialogService dialogService) : 
             base(dialogService, DeleteMessage, AddItemViewModelName, EditItemViewModelName)
+        {
+            
+        }
+
+        protected override void OnItemEdited(Subject item)
+        {
+            
+        }
+
+        protected override void OnItemAdded(Subject item)
+        {
+            
+        }
+
+        protected override void OnItemDeleted(Subject item)
         {
             
         }

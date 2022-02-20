@@ -17,8 +17,8 @@ using ReactiveUI;
 
 namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
 {
-    public abstract class SingleItemUserControlViewModel<TItem> : 
-        ViewModelBase where TItem : NotifiedModel, INamedModel, new()
+    public abstract class RelativeItemUserControlViewModel<TItem, TParent> : ViewModelBase
+        where TItem : NotifiedModel, INamedModel, new() where TParent : IContainItems<TItem>
     {
         protected readonly IDialogService DialogService;
         
@@ -55,13 +55,30 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
         }
 
         protected SourceList<TItem> AllItems;
+        
+        private TParent _parent;
+        
+        public void SetItemsBy(TParent parent)
+        {
+            _parent = parent;
+            
+            AllItems.Clear();
+            AllItems.AddRange(_parent.Items);
+        }
 
-        public void SubjectDoubleTappedExecute()
+        public void ItemDoubleTappedExecute()
         {
             ItemDoubleTapped?.Invoke(_selectedItem);
         }
+
+        public event Action ReturnRequested;
+
+        public void ReturnToParentExecute()
+        {
+            ReturnRequested?.Invoke();
+        }
         
-        protected virtual async Task OnAddItemCommandExecute()
+        protected async Task OnAddItemCommandExecute()
         {
             var result = await DialogService.ShowDialogAsync<ItemResult<TItem>,
                 IEnumerable<TItem>>(AddItemViewModelName, AllItems.Items);
@@ -69,20 +86,20 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             if (result != null)
             {
                 AllItems.Add(result.Item);
-                ItemAdded?.Invoke(result.Item);
+                ItemAdded?.Invoke(result.Item, _parent);
             }
         }
         
-        public virtual async Task DeleteItemCommand(object parameter)
+        public async Task DeleteItemCommand(object parameter)
         {
             var result = await DialogService.ShowDialogAsync<DialogResultBase, string>
                 (nameof(AcceptActionDialogViewModel), _deleteMessage);
 
             if (result != null)
             {
-                var index = Items.IndexOf(_selectedItem);
-                ItemDeleted?.Invoke(_selectedItem);
-                AllItems.Remove(_selectedItem);
+                var index = Items.IndexOf(SelectedItem);
+                ItemRemoved?.Invoke(SelectedItem, _parent);
+                AllItems.Remove(SelectedItem);
 
                 if (Items.Count > 0)
                     SelectedItem = Items[index == 0 ? index :  index - 1];
@@ -95,15 +112,14 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             return parameter != null;
         }
         
-        public virtual async Task EditItemCommand(object parameter)
+        public async Task EditItemCommand(object parameter)
         {
             var result = await DialogService.ShowDialogAsync<ItemResult<TItem>, TItem>
                 (EditItemViewModelName, SelectedItem);
 
             if (result != null)
             {
-                _selectedItem.ItemName = result.Item.ItemName;
-                ItemEdited?.Invoke(_selectedItem);
+                ItemEditRequested?.Invoke(SelectedItem, result.Item, _parent);
             }
         }
         
@@ -113,16 +129,16 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             return parameter != null;
         }
 
-        private event Action<TItem> ItemEdited;
-        private event Action<TItem> ItemDeleted;
-        private event Action<TItem> ItemAdded;
+        private event Action<TItem, TParent> ItemAdded;
+        private event Action<TItem, TItem, TParent> ItemEditRequested;
+        private event Action<TItem, TParent> ItemRemoved;
 
-        protected abstract void OnItemEdited(TItem item);
-        protected abstract void OnItemAdded(TItem item);
-        protected abstract void OnItemDeleted(TItem item);
+        protected new abstract void OnItemAdded(TItem item, TParent parent);
+        protected new abstract void OnItemEditRequested(TItem item, TItem newItem, TParent parent);
+        protected abstract void OnItemRemoved(TItem item, TParent parent);
         
 
-        public SingleItemUserControlViewModel(IDialogService dialogService, string deleteMessage, 
+        public RelativeItemUserControlViewModel(IDialogService dialogService, string deleteMessage, 
             string addItemViewModelName, string editItemViewModelName)
         {
             DialogService = dialogService;
@@ -143,9 +159,9 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             
             AddItemCommand = ReactiveCommand.CreateFromTask(OnAddItemCommandExecute);
 
-            ItemEdited += OnItemEdited;
             ItemAdded += OnItemAdded;
-            ItemDeleted += OnItemDeleted;
+            ItemEditRequested += OnItemEditRequested;
+            ItemRemoved += OnItemRemoved;
         }
         
         protected virtual Func<TItem, bool> BuildFilter(string searchText)

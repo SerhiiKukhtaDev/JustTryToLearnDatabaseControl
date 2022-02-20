@@ -3,31 +3,21 @@ using JustTryToLearnDatabaseEditor.Models.Base;
 
 namespace JustTryToLearnDatabaseEditor.Models
 {
-    public sealed class Class : NotifiedModel, INamedModel
+    public sealed class Class : NotifiedModel, INamedModel, IContainItems<Theme>
     {
         private string? _name;
-        
-        public ObservableCollection<Theme> Themes { get; private set; }
 
         public string? ItemName
         {
             get => _name;
             set => Set(ref _name, value);
         }
-        
-        public void AddTheme(Theme themeToAdd)
-        {
-            Themes.Add(themeToAdd);
-        }
-
-        public void RemoveTheme(Theme theme)
-        {
-            Themes.Remove(theme);
-        }
 
         public Class()
         {
-            Themes = new ObservableCollection<Theme>();
+            Items = new ObservableCollection<Theme>();
         }
+
+        public ObservableCollection<Theme> Items { get; set; }
     }
 }
