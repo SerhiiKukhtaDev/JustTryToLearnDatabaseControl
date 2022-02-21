@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using JetBrains.Annotations;
+using System.Reactive;
+using System.Reactive.Linq;
+using DynamicData;
+using DynamicData.Binding;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Models.Statics;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base;
@@ -13,6 +16,14 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
 {
     public class EditQuestionDialogViewModel : ParameterizedDialogViewModelBase<ItemResult<Question>, Question>
     {
+        private bool _isOneRightAnswer = true;
+
+        public bool IsOneRightAnswer
+        {
+            get => _isOneRightAnswer;
+            set => this.RaiseAndSetIfChanged(ref _isOneRightAnswer, value);
+        }
+        
         private int _sliderValue;
 
         public int SliderValue
@@ -57,15 +68,21 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
 
         private Question _currentQuestion;
         
+        private readonly IObservable<bool> _allAnswersNotEmpty;
+        private readonly IObservable<bool> _questionTextAndRightAnswerNotEmpty;
+
         public Question CurrentQuestion => _currentQuestion;
 
         public override void Activate(Question parameter)
         {
+            if(Answers != null)
+                Answers.Clear();
+
             _currentQuestion = parameter;
 
             SliderValue = _currentQuestion.TimeToAnswer;
             DifficultyText = _currentQuestion.Difficulty;
-            Answers = new ObservableCollection<Answer>(parameter.Answers);
+            Answers.AddRange(parameter.Answers);
             QuestionText = _currentQuestion.ItemName;
         }
         
@@ -107,16 +124,21 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
                 foreach (var a in Answers)
                 {
                     a.IsEnabled = true;
+                    IsOneRightAnswer = false;
                 }
                 
                 return;
             }
+
+            answer.IsRightAnswer = IsOneRightAnswer = true;
 
             foreach (var a in Answers.Where(an => !an.Equals(answer)))
             {
                 a.IsEnabled = false;
             }
         }
+        
+        public ReactiveCommand<Unit, Unit> EditQuestionCommand { get; set; }
 
         public void EditQuestion()
         {
@@ -129,6 +151,29 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
             };
             
             Close(new ItemResult<Question>(question));
+        }
+
+        public EditQuestionDialogViewModel()
+        {
+            Answers = new ObservableCollection<Answer>();
+            
+            _allAnswersNotEmpty = Answers
+                .ToObservableChangeSet()
+                .AutoRefresh(model => model.AnswerText)
+                .ToCollection()                   
+                .Select(x => x.All(y => !string.IsNullOrEmpty(y.AnswerText)));
+
+
+            _questionTextAndRightAnswerNotEmpty = this.WhenAnyValue(
+                x => x.IsOneRightAnswer,
+                x => x.QuestionText,
+                (answer, text) => answer && !string.IsNullOrEmpty(text));
+
+            var canExecute = this.WhenAnyObservable(
+                x => x._allAnswersNotEmpty,
+                x => x._questionTextAndRightAnswerNotEmpty, (b, b1) => b && b1);
+            
+            EditQuestionCommand = ReactiveCommand.Create(EditQuestion, canExecute);
         }
 
         private int Clamp(int value, int minValue, int maxValue)

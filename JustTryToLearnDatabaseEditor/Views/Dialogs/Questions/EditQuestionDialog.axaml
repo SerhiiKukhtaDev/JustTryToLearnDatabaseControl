@@ -25,8 +25,7 @@
                     </Button.Content>
                 </Button>
                 <Button Background="{DynamicResource EditButton}" Foreground="White" Margin="5"
-                        Command="{Binding  EditQuestion}"
-                        CommandParameter="{Binding #Box.Items}">
+                        Command="{Binding  EditQuestionCommand}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>

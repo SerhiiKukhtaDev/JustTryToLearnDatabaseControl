@@ -1,8 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using DynamicData;
+using DynamicData.Binding;
 using JetBrains.Annotations;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Models.Statics;
@@ -22,6 +25,14 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
         {
             get => _questionText;
             set => this.RaiseAndSetIfChanged(ref _questionText, value);
+        }
+
+        private bool _isOneRightAnswer;
+
+        public bool IsOneRightAnswer
+        {
+            get => _isOneRightAnswer;
+            set => this.RaiseAndSetIfChanged(ref _isOneRightAnswer, value);
         }
 
         private int _sliderValue = 30;
@@ -64,25 +75,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
             set => this.RaiseAndSetIfChanged(ref _answers, value);
         }
 
-        private IEnumerable<Question> _questions;
-
-        public void AddNewQuestion(object parameter)
-        {
-            Question question = new Question()
-            {
-                ItemName = QuestionText,
-                Answers = Answers.ToList(),
-                Difficulty = SelectedDifficulty,
-                TimeToAnswer = SliderValue
-            };
-            
-            Close(new ItemResult<Question>(question));
-        }
-
-        public bool CanAddNewQuestion(object parameter)
-        {
-            return true;
-        }
+        public ReactiveCommand<Unit, Unit> AddNewQuestionCommand { get; set; }
 
         public void ChooseRightAnswer(Answer answer)
         {
@@ -93,11 +86,11 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
                     a.IsEnabled = true;
                 }
 
-                answer.IsRightAnswer = false;
+                answer.IsRightAnswer = IsOneRightAnswer = false;
                 return;
             }
 
-            answer.IsRightAnswer = true;
+            answer.IsRightAnswer = IsOneRightAnswer = true;
 
             foreach (var a in Answers.Where(an => !an.Equals(answer)))
             {
@@ -105,17 +98,48 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
             }
         }
 
+        public void AddNewQuestion()
+        {
+            Question question = new Question()
+            {
+                ItemName = QuestionText,
+                Answers = Answers.ToList(),
+                Difficulty = SelectedDifficulty,
+                TimeToAnswer = SliderValue
+            };
+
+            Close(new ItemResult<Question>(question));
+        }
+
+        private readonly IObservable<bool> _allAnswersNotEmpty;
+        private readonly IObservable<bool> _questionTextAndRightAnswerNotEmpty;
+
         public AddQuestionDialogViewModel()
         {
             DifficultyTypes = new ObservableCollection<string>(Difficulty.GetAllTypes());
+            Answers = new ObservableCollection<Answer>();
+
+            _allAnswersNotEmpty = Answers
+                .ToObservableChangeSet()
+                .AutoRefresh(model => model.AnswerText)
+                .ToCollection()                   
+                .Select(x => x.All(y => !string.IsNullOrEmpty(y.AnswerText)));
+
+
+            _questionTextAndRightAnswerNotEmpty = this.WhenAnyValue(
+                x => x.IsOneRightAnswer,
+                x => x.QuestionText,
+                (answer, text) => answer && !string.IsNullOrEmpty(text));
+
+            var canExecute = this.WhenAnyObservable(
+                x => x._allAnswersNotEmpty,
+                x => x._questionTextAndRightAnswerNotEmpty, (b, b1) => b && b1);
+
+            AddNewQuestionCommand = ReactiveCommand.Create(AddNewQuestion, canExecute);
         }
 
         public override void Activate(IEnumerable<Question> parameter)
         {
-            _questions = parameter;
-
-            Answers = new ObservableCollection<Answer>();
-            
             Answers.Add(new Answer());
             Answers.Add(new Answer());
         }

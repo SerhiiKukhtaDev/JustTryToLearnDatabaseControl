@@ -7,8 +7,8 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 {
     public class ThemesControlViewModel : RelativeItemUserControlViewModel<Theme, Class>
     {
-        private const string AddItemViewModelName = nameof(AddThemeDialogViewModel);
-        private const string EditItemViewModelName = nameof(EditThemeDialogViewModel);
+        private new const string AddItemViewModelName = nameof(AddThemeDialogViewModel);
+        private new const string EditItemViewModelName = nameof(EditThemeDialogViewModel);
 
         private const string DeleteMessage =
             "Видалення цієї теми призведе до видалення всіх питань які залежать від неї." +
@@ -21,18 +21,18 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
         protected override void OnItemAdded(Theme item, Class parent)
         {
-            
+            ((IContainItems<Theme>)parent).AddItem(item);
         }
 
         protected override void OnItemEditRequested(Theme item, Theme newItem, Class parent)
         {
-            
+            item.ItemName = newItem.ItemName;
         }
 
 
         protected override void OnItemRemoved(Theme item, Class parent)
         {
-            
+            ((IContainItems<Theme>)parent).RemoveItem(item);
         }
     }
 }

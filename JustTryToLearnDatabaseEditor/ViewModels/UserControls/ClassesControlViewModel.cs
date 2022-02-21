@@ -26,12 +26,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls
 
         protected override void OnItemEditRequested(Class item, Class newItem, Subject parent)
         {
-            
+            item.ItemName = newItem.ItemName;
         }
 
         protected override void OnItemRemoved(Class item, Subject parent)
         {
-            
+            (parent as IContainItems<Class>).RemoveItem(item);
         }
     }
 }

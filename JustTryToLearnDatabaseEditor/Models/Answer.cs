@@ -7,6 +7,8 @@ namespace JustTryToLearnDatabaseEditor.Models
         public Answer Element => this;
         
         private bool _isEnabled = true;
+        private bool _isRightAnswer;
+        private string _answerText;
 
         public bool IsEnabled
         {
@@ -14,9 +16,17 @@ namespace JustTryToLearnDatabaseEditor.Models
             set => Set(ref _isEnabled, value);
         }
 
-        public bool IsRightAnswer { get; set; }
-        
-        public string AnswerText { get; set; }
+        public bool IsRightAnswer
+        {
+            get => _isRightAnswer;
+            set => Set(ref _isRightAnswer, value);
+        }
+
+        public string AnswerText
+        {
+            get => _answerText;
+            set => Set(ref _answerText, value);
+        }
 
         public Answer()
         {

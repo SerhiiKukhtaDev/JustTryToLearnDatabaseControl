@@ -74,7 +74,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5">
-                                    <avalonia1:MaterialIcon Width="30" Height="30" Kind="Numbers"/>
+                                    <avalonia1:MaterialIcon Width="30" Height="30" Kind="LearnOutline"/>
                                     <TextBlock Margin="5" FontSize="16" Text="{Binding Path=ItemName}" />
                                 </StackPanel>
                             </DataTemplate>

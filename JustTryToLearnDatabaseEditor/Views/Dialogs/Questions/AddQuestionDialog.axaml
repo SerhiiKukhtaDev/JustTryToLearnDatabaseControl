@@ -27,8 +27,7 @@
                     </Button.Content>
                 </Button>
                 <Button Background="Green" Foreground="White" Margin="5"
-                        Command="{Binding  AddNewQuestion}"
-                        CommandParameter="{Binding #Box.Items}">
+                        Command="{Binding  AddNewQuestionCommand}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <avalonia:MaterialIcon Kind="Edit"></avalonia:MaterialIcon>
@@ -91,6 +90,7 @@
                                                   AncestorType={x:Type ListBox}}, Path=DataContext.TextBoxTapped}"
                                                                          CommandParameter="{Binding Element}"/>
                                                 </EventTriggerBehavior>
+                                                
                                             </Interaction.Behaviors>
                                         </TextBox>
                                     </DockPanel>
