@@ -9,6 +9,7 @@ namespace JustTryToLearnDatabaseEditor.Models
 
         void AddItem(T item)
         {
+            Items ??= new ObservableCollection<T>();
             Items.Add(item);
         }
 

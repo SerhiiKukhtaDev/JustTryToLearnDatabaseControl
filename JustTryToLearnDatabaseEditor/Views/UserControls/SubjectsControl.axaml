@@ -51,8 +51,8 @@
         
         <DockPanel>
             <styles:ColorZone Mode="Light" Margin="10">
-                <StackPanel>
-                    <DockPanel>
+                <DockPanel>
+                    <DockPanel Dock="Top">
                         <TextBlock VerticalAlignment="Top" DockPanel.Dock="Left" FontSize="14" Foreground="Gray" FontStyle="Italic" Margin="10" Text="Предмети: "></TextBlock>
                         <DockPanel Height="50" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250" Margin="20 0">
                             <TextBox Text="{Binding SearchText}" Background="White" Watermark="Пошук" Classes="Filled" Height="30" BorderThickness="0">
@@ -68,19 +68,19 @@
                              SelectedItem="{Binding SelectedItem}">
                         <Interaction.Behaviors>
                     <EventTriggerBehavior EventName="DoubleTapped">
-                        <InvokeCommandAction Command="{Binding SubjectDoubleTappedExecute}"/>
+                        <InvokeCommandAction Command="{Binding ItemDoubleTappedExecute}"/>
                     </EventTriggerBehavior>
                 </Interaction.Behaviors>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5">
                                     <avalonia1:MaterialIcon Width="30" Height="30" Kind="LearnOutline"/>
-                                    <TextBlock Margin="5" FontSize="16" Text="{Binding Path=ItemName}" />
+                                    <TextBlock Margin="5" FontSize="16" Text="{Binding Path=Name}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox >
-                </StackPanel>
+                </DockPanel>
             </styles:ColorZone>
         </DockPanel>
     </DockPanel>

@@ -1,16 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JustTryToLearnDatabaseEditor.Models.Base;
+using MongoDB.Bson;
 
 namespace JustTryToLearnDatabaseEditor.Models
 {
-    public class Question : NotifiedModel, INamedModel
+    public class Question : Model<Theme>, INamedModel
     {
-        private string? _question;
+        public ObjectId Id { get; set; }
 
-        public string? ItemName
+        [NonSerialized] private Theme _theme;
+        
+        public Theme Theme => _theme;
+
+        private string? _question;
+        
+
+        public string? Name
         {
             get => _question;
             set => Set(ref _question, value);
+        }
+
+        public Question() : this(null)
+        {
+            
+        }
+
+        public Question(Theme theme)
+        {
+            _theme = theme;
+            Id = ObjectId.GenerateNewId();
         }
         
         public List<Answer> Answers { get; set; }
@@ -18,5 +38,10 @@ namespace JustTryToLearnDatabaseEditor.Models
         public string Difficulty { get; set; }
         
         public int TimeToAnswer { get; set; }
+        
+        public override void SetParent(Theme parent)
+        {
+            _theme = parent;
+        }
     }
 }

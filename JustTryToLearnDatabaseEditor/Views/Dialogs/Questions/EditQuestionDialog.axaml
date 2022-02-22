@@ -79,7 +79,6 @@
                                                   Command="{Binding RelativeSource={RelativeSource FindAncestor,
                                                   AncestorType={x:Type ListBox}}, Path=DataContext.ToggleRightAnswer}"
                                                   CommandParameter="{Binding Element}"
-                                                  IsEnabled="{Binding IsEnabled}"
                                                   IsChecked="{Binding IsRightAnswer}">
                                         </CheckBox>
                                         <avalonia:MaterialIcon  Kind="QuestionAnswer"></avalonia:MaterialIcon>

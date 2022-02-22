@@ -8,6 +8,7 @@ using DynamicData;
 using DynamicData.Binding;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Models.Statics;
+using JustTryToLearnDatabaseEditor.Services.Utils;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
 using ReactiveUI;
@@ -16,12 +17,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
 {
     public class EditQuestionDialogViewModel : ParameterizedDialogViewModelBase<ItemResult<Question>, Question>
     {
-        private bool _isOneRightAnswer = true;
+        private bool _isOnlyOneRightAnswer = true;
 
-        public bool IsOneRightAnswer
+        public bool IsOnlyOneRightAnswer
         {
-            get => _isOneRightAnswer;
-            set => this.RaiseAndSetIfChanged(ref _isOneRightAnswer, value);
+            get => _isOnlyOneRightAnswer;
+            set => this.RaiseAndSetIfChanged(ref _isOnlyOneRightAnswer, value);
         }
         
         private int _sliderValue;
@@ -83,14 +84,14 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
             SliderValue = _currentQuestion.TimeToAnswer;
             DifficultyText = _currentQuestion.Difficulty;
             Answers.AddRange(parameter.Answers);
-            QuestionText = _currentQuestion.ItemName;
+            QuestionText = _currentQuestion.Name;
         }
         
         public void AddNewAnswerExecute(object parameter)
         {
             if (Answers.FirstOrDefault(answer => answer.IsRightAnswer) != null)
             {
-                Answers.Add(new Answer() {IsEnabled = false});
+                Answers.Add(new Answer());
                 return;
             }
             
@@ -119,34 +120,25 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
         
         public void ToggleRightAnswer(Answer answer)
         {
-            if (!answer.IsRightAnswer)
-            {
-                foreach (var a in Answers)
-                {
-                    a.IsEnabled = true;
-                    IsOneRightAnswer = false;
-                }
-                
-                return;
-            }
-
-            answer.IsRightAnswer = IsOneRightAnswer = true;
-
-            foreach (var a in Answers.Where(an => !an.Equals(answer)))
-            {
-                a.IsEnabled = false;
-            }
+            IsOnlyOneRightAnswer = Answers.Count(a => a.IsRightAnswer) == 1;
         }
         
         public ReactiveCommand<Unit, Unit> EditQuestionCommand { get; set; }
 
         public void EditQuestion()
         {
-            Question question = new Question()
+            var answers = Answers.ToList();
+            
+            foreach (var answer in answers)
             {
-                Answers = Answers.ToList(),
+                answer.AnswerText = answer.AnswerText.NormalizeString();
+            }
+
+            Question question = new()
+            {
+                Answers = answers,
                 Difficulty = DifficultyText,
-                ItemName = QuestionText,
+                Name = QuestionText.NormalizeString(),
                 TimeToAnswer = Clamp(_sliderValue, 0, 180)
             };
             
@@ -165,7 +157,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
 
 
             _questionTextAndRightAnswerNotEmpty = this.WhenAnyValue(
-                x => x.IsOneRightAnswer,
+                x => x.IsOnlyOneRightAnswer,
                 x => x.QuestionText,
                 (answer, text) => answer && !string.IsNullOrEmpty(text));
 

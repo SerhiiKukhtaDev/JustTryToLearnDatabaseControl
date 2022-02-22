@@ -9,6 +9,7 @@ using DynamicData.Binding;
 using JetBrains.Annotations;
 using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Models.Statics;
+using JustTryToLearnDatabaseEditor.Services.Utils;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
 using ReactiveUI;
@@ -27,12 +28,12 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
             set => this.RaiseAndSetIfChanged(ref _questionText, value);
         }
 
-        private bool _isOneRightAnswer;
+        private bool _isOnlyOneRightAnswer;
 
-        public bool IsOneRightAnswer
+        public bool IsOnlyOneRightAnswer
         {
-            get => _isOneRightAnswer;
-            set => this.RaiseAndSetIfChanged(ref _isOneRightAnswer, value);
+            get => _isOnlyOneRightAnswer;
+            set => this.RaiseAndSetIfChanged(ref _isOnlyOneRightAnswer, value);
         }
 
         private int _sliderValue = 30;
@@ -79,31 +80,22 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
 
         public void ChooseRightAnswer(Answer answer)
         {
-            if (answer.IsRightAnswer)
-            {
-                foreach (var a in Answers.Where(an => !an.Equals(answer)))
-                {
-                    a.IsEnabled = true;
-                }
-
-                answer.IsRightAnswer = IsOneRightAnswer = false;
-                return;
-            }
-
-            answer.IsRightAnswer = IsOneRightAnswer = true;
-
-            foreach (var a in Answers.Where(an => !an.Equals(answer)))
-            {
-                a.IsEnabled = false;
-            }
+            IsOnlyOneRightAnswer = Answers.Count(a => a.IsRightAnswer) == 1;
         }
 
         public void AddNewQuestion()
         {
+            var answers = Answers.ToList();
+            
+            foreach (var answer in answers)
+            {
+                answer.AnswerText = answer.AnswerText.NormalizeString();
+            }
+
             Question question = new Question()
             {
-                ItemName = QuestionText,
-                Answers = Answers.ToList(),
+                Name = QuestionText.NormalizeString(),
+                Answers = answers,
                 Difficulty = SelectedDifficulty,
                 TimeToAnswer = SliderValue
             };
@@ -127,7 +119,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
 
 
             _questionTextAndRightAnswerNotEmpty = this.WhenAnyValue(
-                x => x.IsOneRightAnswer,
+                x => x.IsOnlyOneRightAnswer,
                 x => x.QuestionText,
                 (answer, text) => answer && !string.IsNullOrEmpty(text));
 
@@ -148,7 +140,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Questions
         {
             if (Answers.FirstOrDefault(answer => answer.IsRightAnswer) != null)
             {
-                Answers.Add(new Answer() {IsEnabled = false});
+                Answers.Add(new Answer()); //{IsEnabled = false});
                 return;
             }
             

@@ -58,9 +58,9 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-            <styles:ColorZone Mode="Light" Margin="10">
-                <StackPanel>
-                    <DockPanel>
+            <styles:Card Margin="10">
+                <DockPanel>
+                    <DockPanel Dock="Top">
                         <TextBlock VerticalAlignment="Top" DockPanel.Dock="Left" FontSize="14" Foreground="Gray" FontStyle="Italic" Margin="10" Text="Запитання: "></TextBlock>
                         <DockPanel Height="50" DockPanel.Dock="Right" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250" Margin="20 0">
                             <TextBox Text="{Binding SearchText}" Background="White" Watermark="Пошук" Classes="Filled" Height="30" BorderThickness="0">
@@ -74,17 +74,17 @@
                     </DockPanel>
                     <ListBox HorizontalAlignment="Stretch" Items="{Binding Items}" Name="Box" 
                              SelectedItem="{Binding SelectedItem}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5">
-                                    <avalonia:MaterialIcon Width="30" Height="30" Kind="QuestionMark"/>
-                                    <TextBlock Margin="5" FontSize="16" Text="{Binding Path=ItemName}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox >
-                </StackPanel>
-            </styles:ColorZone>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="5">
+                                        <avalonia:MaterialIcon Width="30" Height="30" Kind="QuestionMark"/>
+                                        <TextBlock Margin="5" FontSize="16" Text="{Binding Path=Name}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox >
+                </DockPanel>
+            </styles:Card>
         </DockPanel>
     </DockPanel>
 </UserControl>

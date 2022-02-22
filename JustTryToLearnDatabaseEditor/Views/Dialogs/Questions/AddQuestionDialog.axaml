@@ -80,7 +80,7 @@
                                                   Command="{Binding RelativeSource={RelativeSource FindAncestor,
                                                   AncestorType={x:Type ListBox}}, Path=DataContext.ChooseRightAnswer}"
                                                   CommandParameter="{Binding Element}"
-                                                  IsEnabled="{Binding IsEnabled}"></CheckBox>
+                                                  IsChecked="{Binding IsRightAnswer}"></CheckBox>
                                         <avalonia:MaterialIcon  Kind="QuestionAnswer"></avalonia:MaterialIcon>
                                         <TextBox Classes="Solo" Watermark="Відповідь" Margin="5 0" Height="40" FontSize="14" BorderThickness="0" 
                                                  Text="{Binding AnswerText}" >

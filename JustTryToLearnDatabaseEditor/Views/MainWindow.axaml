@@ -3,13 +3,17 @@
         xmlns:vm="using:JustTryToLearnDatabaseEditor.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        xmlns:uc="clr-namespace:JustTryToLearnDatabaseEditor.Views"
         xmlns:userControls="clr-namespace:JustTryToLearnDatabaseEditor.Views.UserControls"
         x:Class="JustTryToLearnDatabaseEditor.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        >
+        Title="{Binding Greeting}">
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Closing">
+            <InvokeCommandAction Command="{Binding OnQuit}"/>
+        </EventTriggerBehavior>
+                                                
+    </Interaction.Behaviors>
         
     <Design.DataContext>
         <vm:MainWindowViewModel/>

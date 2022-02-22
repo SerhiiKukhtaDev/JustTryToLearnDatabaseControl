@@ -1,4 +1,5 @@
-﻿using JustTryToLearnDatabaseEditor.Services.Interfaces;
+﻿using JustTryToLearnDatabaseEditor.Services.Database;
+using JustTryToLearnDatabaseEditor.Services.Interfaces;
 using JustTryToLearnDatabaseEditor.Services.Providers.Interfaces;
 using Splat;
 
@@ -16,6 +17,8 @@ namespace JustTryToLearnDatabaseEditor.Services.DI
             services.RegisterLazySingleton<IDialogService>(() => new DialogService(
                 resolver.GetService<IMainWindowProvider>()
             ));
+
+            services.RegisterLazySingleton<IDatabaseService>(() => new DatabaseService());
         }
     }
 }

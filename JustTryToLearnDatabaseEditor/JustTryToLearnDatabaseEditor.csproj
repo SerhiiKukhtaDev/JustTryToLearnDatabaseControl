@@ -21,6 +21,8 @@
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.12" />
     <PackageReference Include="Material.Avalonia" Version="2.5.0.78-nightly" />
     <PackageReference Include="Material.Icons.Avalonia" Version="1.0.2" />
+    <PackageReference Include="MongoDB.Bson" Version="2.14.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Views\UserControls\SubjectsControl.axaml.cs">

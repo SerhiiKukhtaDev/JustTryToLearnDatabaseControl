@@ -1,20 +1,14 @@
-﻿using JustTryToLearnDatabaseEditor.Models.Base;
+﻿using System;
+using JustTryToLearnDatabaseEditor.Models.Base;
 
 namespace JustTryToLearnDatabaseEditor.Models
 {
     public class Answer : NotifiedModel
     {
         public Answer Element => this;
-        
-        private bool _isEnabled = true;
+
         private bool _isRightAnswer;
         private string _answerText;
-
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set => Set(ref _isEnabled, value);
-        }
 
         public bool IsRightAnswer
         {

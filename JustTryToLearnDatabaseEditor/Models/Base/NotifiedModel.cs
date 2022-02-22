@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace JustTryToLearnDatabaseEditor.Models.Base
 {
-    public class NotifiedModel : INotifyPropertyChanged
+    public abstract class NotifiedModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -23,5 +23,10 @@ namespace JustTryToLearnDatabaseEditor.Models.Base
 
             return true;
         }
+    }
+
+    public abstract class Model<TParent> : NotifiedModel
+    {
+        public abstract void SetParent(TParent parent);
     }
 }

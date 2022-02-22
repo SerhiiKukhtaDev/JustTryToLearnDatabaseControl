@@ -102,7 +102,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
 
             if (result != null)
             {
-                _selectedItem.ItemName = result.Item.ItemName;
+                _selectedItem.Name = result.Item.Name;
                 ItemEdited?.Invoke(_selectedItem);
             }
         }
@@ -153,7 +153,7 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             if (string.IsNullOrWhiteSpace(searchText))
                 return t => true;
             
-            return t => t.ItemName.Contains(searchText);
+            return t => t.Name.Contains(searchText);
         }
     }
 }

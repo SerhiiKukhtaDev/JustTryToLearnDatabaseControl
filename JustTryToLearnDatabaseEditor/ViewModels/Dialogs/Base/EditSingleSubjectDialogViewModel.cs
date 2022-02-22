@@ -1,5 +1,6 @@
 ﻿using JustTryToLearnDatabaseEditor.Models;
 using JustTryToLearnDatabaseEditor.Models.Base;
+using JustTryToLearnDatabaseEditor.Services.Utils;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults;
 using ReactiveUI;
 
@@ -20,19 +21,20 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base
 
         public void OnEditCommandExecute(object parameter)
         {
-            Close(new ItemResult<T>(new T() {ItemName = _editedItemName}));
+            var str = _editedItemName.NormalizeString();
+            Close(new ItemResult<T>(new T() {Name = str}));
         }
 
         public bool CanOnEditCommandExecute(object parameter)
         {
             string text = parameter as string;
-            return !string.IsNullOrWhiteSpace(text) && text != _selectedItem.ItemName && text.Length < 256;
+            return !string.IsNullOrWhiteSpace(text) && text != _selectedItem.Name && text.Length < 256;
         }
 
         public override void Activate(T parameter)
         {
             _selectedItem = parameter;
-            EditedItemName = _selectedItem.ItemName;
+            EditedItemName = _selectedItem.Name;
         }
     }
 }

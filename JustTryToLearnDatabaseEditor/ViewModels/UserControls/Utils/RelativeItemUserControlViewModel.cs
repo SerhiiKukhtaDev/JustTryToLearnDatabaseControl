@@ -18,7 +18,7 @@ using ReactiveUI;
 namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
 {
     public abstract class RelativeItemUserControlViewModel<TItem, TParent> : ViewModelBase
-        where TItem : NotifiedModel, INamedModel, new() where TParent : IContainItems<TItem>
+        where TItem : Model<TParent>, INamedModel where TParent : IContainItems<TItem>
     {
         protected readonly IDialogService DialogService;
         
@@ -63,6 +63,15 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             _parent = parent;
             
             AllItems.Clear();
+            
+            if(parent.Items == null)
+                return;
+            
+            foreach (var notifiedModel in _parent.Items)
+            {
+                notifiedModel.SetParent(parent);
+            }
+            
             AllItems.AddRange(_parent.Items);
         }
 
@@ -163,13 +172,20 @@ namespace JustTryToLearnDatabaseEditor.ViewModels.UserControls.Utils
             ItemEditRequested += OnItemEditRequested;
             ItemRemoved += OnItemRemoved;
         }
+
+        public void Dispose()
+        {
+            ItemAdded -= OnItemAdded;
+            ItemEditRequested -= OnItemEditRequested;
+            ItemRemoved -= OnItemRemoved;
+        }
         
         protected virtual Func<TItem, bool> BuildFilter(string searchText)
         {
             if (string.IsNullOrWhiteSpace(searchText))
                 return t => true;
             
-            return t => t.ItemName.Contains(searchText);
+            return t => t.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

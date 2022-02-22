@@ -2,7 +2,7 @@
 
 namespace JustTryToLearnDatabaseEditor.ViewModels.Dialogs.Base.DialogResults
 {
-    public class ItemResult<T> : DialogResultBase where T : new()
+    public class ItemResult<T> : DialogResultBase
     {
         public T Item;
 

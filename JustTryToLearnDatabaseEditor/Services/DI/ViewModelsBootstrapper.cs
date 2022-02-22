@@ -1,4 +1,5 @@
-﻿using JustTryToLearnDatabaseEditor.Services.Interfaces;
+﻿using JustTryToLearnDatabaseEditor.Services.Database;
+using JustTryToLearnDatabaseEditor.Services.Interfaces;
 using JustTryToLearnDatabaseEditor.Services.Providers.Interfaces;
 using JustTryToLearnDatabaseEditor.ViewModels;
 using JustTryToLearnDatabaseEditor.ViewModels.Dialogs;
@@ -22,7 +23,7 @@ namespace JustTryToLearnDatabaseEditor.Services.DI
         private static void RegisterServices(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
         {
             services.RegisterLazySingleton(() => new MainWindowViewModel(
-                resolver.GetService<IDialogService>()
+                resolver.GetService<IDialogService>(), resolver.GetService<IDatabaseService>()
             ));
         }
         
