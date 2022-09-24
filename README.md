@@ -1,6 +1,6 @@
 
 # JustTryToLearnDatabaseControl
-.Net Avalonia mvvm application for controlling game's data
+.Net Avalonia mvvm application for controlling game's data. MongoDB database was used.
 
 
 
